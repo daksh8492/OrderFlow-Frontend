@@ -17,7 +17,13 @@ import AddUserForm from "../components/AddUserDialog";
 import { Input } from "@/components/ui/input";
 import type { UserFormData } from "../schema/userSchema";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function UserPage() {
   const [usersPage, setUsersPage] = useState<PageResponse<User> | null>(null);
@@ -28,14 +34,18 @@ function UserPage() {
   const [roleFilter, setRoleFilter] = useState("ALL");
 
   const fetchUsers = async () => {
-      let response;
-      if(search.trim().length > 0){
-        response = await searchUsers(search, page, size)
-      }else if(roleFilter != "ALL"){
-        response = await getUsersByFieldOfWork(roleFilter as FieldOfWork, page, size)
-      }else{
-        response = await getUsers(page, size);
-      }
+    let response;
+    if (search.trim().length > 0) {
+      response = await searchUsers(search, page, size);
+    } else if (roleFilter != "ALL") {
+      response = await getUsersByFieldOfWork(
+        roleFilter as FieldOfWork,
+        page,
+        size,
+      );
+    } else {
+      response = await getUsers(page, size);
+    }
 
     setUsersPage(response);
   };
@@ -93,33 +103,32 @@ function UserPage() {
       await fetchUsers();
     } catch (error) {
       toast.error("Could not join user");
-      console.error("Erorr in joining user: ", error)
+      console.error("Erorr in joining user: ", error);
     }
-  }
+  };
 
   const handleDeleteUser = async (userId: string) => {
     try {
       await deleteUser(userId);
-      toast.success("User deleted successfully")
+      toast.success("User deleted successfully");
       await fetchUsers();
     } catch (error) {
-      toast.error("Could not delete user")
+      toast.error("Could not delete user");
       console.error("Error in deleting user: ", error);
     }
-  }
+  };
 
   const handleSearchChange = (query: string) => {
-      setSearchInput(query)
-      setRoleFilter("ALL")
-      setPage(0)
-  }
+    setSearchInput(query);
+    setRoleFilter("ALL");
+    setPage(0);
+  };
 
   const handleRoleChange = (role: string) => {
-    setRoleFilter(role)
-    setSearchInput("")
-    setPage(0)
-  }
-
+    setRoleFilter(role);
+    setSearchInput("");
+    setPage(0);
+  };
 
   useEffect(() => {
     fetchUsers();

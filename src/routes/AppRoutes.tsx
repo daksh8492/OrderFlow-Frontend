@@ -6,6 +6,8 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import LandingPage from "@/pages/LandingPage";
 import UserPage from "@/features/users/pages/UsersPage";
 import WarehousesPage from "@/features/warehouses/pages/WarehousesPage";
+import ItemPage from "@/features/items/pages/ItemPage";
+import LocationPage from "@/features/locations/pages/LocationPage";
 
 function AppRoutes() {
   return (
@@ -19,6 +21,8 @@ function AppRoutes() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="users/*" element={<UserPage />} />
             <Route path="warehouses/*" element={<WarehousesPage/>}/>
+            <Route path="locations/*" element={<LocationPage/>}/>
+            <Route path="items/*" element={<ItemPage/>}/>
           </Route>
         </Route>
       </Routes>

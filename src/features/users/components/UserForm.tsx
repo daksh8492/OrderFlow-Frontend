@@ -8,7 +8,6 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -19,10 +18,13 @@ import { Input } from "@/components/ui/input";
 import { userSchema, type UserFormData } from "../schema/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import type { Warehouse } from "@/features/warehouses/types/warehouse";
+import { getWarehouses } from "@/features/warehouses/api/warehouseApi";
 
 function UserForm(props: {
   defaultValues?: UserFormData;
-  onSubmit: (data: UserFormData, usereId?: string) => void;
+  onSubmit: (data: UserFormData) => void;
   submitText: string;
 }) {
   const form = useForm<UserFormData>({
@@ -30,9 +32,20 @@ function UserForm(props: {
     defaultValues: props.defaultValues,
   });
 
-  const handleSubmit = async (data:UserFormData) => {
+  const handleSubmit = async (data: UserFormData) => {
     await props.onSubmit(data);
-  }
+  };
+
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+
+  useEffect(() => {
+    const fetchWarehouses = async () => {
+      const respone = await getWarehouses(0, 100);
+      setWarehouses(respone.content);
+    };
+
+    fetchWarehouses();
+  }, []);
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -64,13 +77,11 @@ function UserForm(props: {
                   <SelectValue placeholder="Choose field of work" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
-                    {FIELD_OF_WORK.map((field) => (
-                      <SelectItem key={field} value={field}>
-                        {field.replaceAll("_", " ")}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
+                  {FIELD_OF_WORK.map((field) => (
+                    <SelectItem key={field} value={field}>
+                      {field.replaceAll("_", " ")}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -83,11 +94,23 @@ function UserForm(props: {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel>Warehouse ID</FieldLabel>
-              <Input
+              {/* <Input
                 {...field}
                 value={field.value ?? ""}
                 placeholder="Enter warehouse id"
-              />
+              /> */}
+              <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Warehouse" />
+                </SelectTrigger>
+                <SelectContent>
+                  {warehouses.map((wh) => (
+                    <SelectItem key={wh.warehouseId} value={wh.warehouseId}>
+                      {wh.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

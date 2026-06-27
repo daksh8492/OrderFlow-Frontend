@@ -1,12 +1,7 @@
-import {
-  createColumnHelper,
-} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import type { User } from "../types/user";
 import { Button } from "@/components/ui/button";
-import {
-  EllipsisVertical,
-  Trash2Icon,
-} from "lucide-react";
+import { EllipsisVertical, Trash2Icon } from "lucide-react";
 import EditUserDialog from "./EditUserDialog";
 import type { UserFormData } from "../schema/userSchema";
 import {
@@ -16,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Table from "@/components/common/Table";
+import { useEffect, useState } from "react";
+import { getWarehouses } from "@/features/warehouses/api/warehouseApi";
+import { type Warehouse } from "@/features/warehouses/types/warehouse";
 
 function UsersTable(props: {
   users: User[];
@@ -31,7 +29,6 @@ function UsersTable(props: {
   handleJoinUser: (userId: string) => void;
   handleDeleteUser: (userId: string) => void;
 }) {
-  
   const {
     users,
     page,
@@ -46,9 +43,27 @@ function UsersTable(props: {
     handleJoinUser,
     handleDeleteUser,
   } = props;
-  
+
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+
+  useEffect(() => {
+    const fetchWarehouses = async () => {
+      try {
+        const res = await getWarehouses(0, 100);
+        setWarehouses(res.content);
+      } catch (err) {
+        console.error("Failed to fetch warehouses", err);
+      }
+    };
+    fetchWarehouses();
+  }, []);
+
+  const warehouseMap = new Map<string, string>(
+    warehouses.map((wh) => [wh.warehouseId, wh.name])
+  )
+
   const columnHelper = createColumnHelper<User>();
-  
+
   const columns = [
     columnHelper.accessor("code", {
       header: "Code",
@@ -63,6 +78,11 @@ function UsersTable(props: {
     columnHelper.accessor("fieldOfWork", {
       header: "Role",
       cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor("warehouseId", {
+      header: "Warehouse",
+      cell: (info) => warehouseMap.get(info.getValue()) ?? "-"
     }),
 
     columnHelper.accessor("city", {

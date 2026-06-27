@@ -1,5 +1,5 @@
 import type { NavItem } from "@/types/navItems";
-import { LayoutDashboard, ShoppingCart, Users, Warehouse } from "lucide-react";
+import { LayoutDashboard, LocationEdit, ShoppingCart, Users, Warehouse } from "lucide-react";
 
 export const NAV_ITEMS: NavItem[] = [
     {
@@ -18,6 +18,12 @@ export const NAV_ITEMS: NavItem[] = [
     title: "Warehouses",
     path: "/app/warehouses",
     icon: Warehouse,
+    roles: ["ADMIN","INVENTORY_MANAGER"],
+  },
+  {
+    title: "Locations",
+    path: "/app/locations",
+    icon: LocationEdit,
     roles: ["ADMIN","INVENTORY_MANAGER"],
   },
   {

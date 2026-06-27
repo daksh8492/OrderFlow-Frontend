@@ -1,8 +1,6 @@
-export type WarehouseStatus =
-    |"ACTIVE"
-    |"INACTIVE"
-    |"CLOSED"
+export type WarehouseStatus = "ACTIVE" | "INACTIVE" | "CLOSED";
 
+export const WAREHOUSE_STATUS = ["ACTIVE", "INACTIVE", "CLOSED"];
 
 export interface Warehouse {
   warehouseId: string;
