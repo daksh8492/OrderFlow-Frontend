@@ -8,6 +8,7 @@ import UserPage from "@/features/users/pages/UsersPage";
 import WarehousesPage from "@/features/warehouses/pages/WarehousesPage";
 import ItemPage from "@/features/items/pages/ItemPage";
 import LocationPage from "@/features/locations/pages/LocationPage";
+import ItemDetailPage from "@/features/items/pages/ItemDetailPage";
 
 function AppRoutes() {
   return (
@@ -22,7 +23,8 @@ function AppRoutes() {
             <Route path="users/*" element={<UserPage />} />
             <Route path="warehouses/*" element={<WarehousesPage/>}/>
             <Route path="locations/*" element={<LocationPage/>}/>
-            <Route path="items/*" element={<ItemPage/>}/>
+            <Route path="items" element={<ItemPage/>}/>
+            <Route path="items/:id" element={<ItemDetailPage/>}/>
           </Route>
         </Route>
       </Routes>

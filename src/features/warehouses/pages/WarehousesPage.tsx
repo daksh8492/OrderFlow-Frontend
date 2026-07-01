@@ -12,6 +12,7 @@ import WarehousesTable from "../components/WarehousesTable";
 import AddWarehouseDialog from "../components/AddWarehouseDialog";
 import type { WarehouseFormData } from "../schema/warehouseSchema";
 import { toast } from "sonner";
+import TableToolbar from "@/components/common/TableToolbar";
 
 function WarehousesPage() {
   const [warehousePage, setWarehousePage] =
@@ -84,9 +85,7 @@ function WarehousesPage() {
         <h1 className="text-3xl font-bold tracking-tight">Warehouses</h1>
         <p className="text-muted-foreground">Manage Warehouses.</p>
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <AddWarehouseDialog handleAddWarehouse={handleAddWarehouse} />
-      </div>
+      <TableToolbar actions={<AddWarehouseDialog handleAddWarehouse={handleAddWarehouse} />}/>
       {warehousePage ? (
         <WarehousesTable
           warehouses={warehousePage.content}

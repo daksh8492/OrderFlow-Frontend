@@ -15,9 +15,10 @@ import {
   getRootLocations,
 } from "../api/locationApi";
 import LocationTreeNode from "./LocationTreeNode";
-import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { formatEnum } from "@/utils/format";
+import { StatusBadge } from "@/components/common/StatusBadge";
 
 function WarehouseTreeNode(props: {
   warehouse: Warehouse;
@@ -91,11 +92,11 @@ function WarehouseTreeNode(props: {
 
   const statusVariant: Record<
     string,
-    "default" | "secondary" | "outline" | "destructive"
+    "primary" | "warning" | "error" | "info" | "neutral"
   > = {
-    ACTIVE: "default",
-    INACTIVE: "secondary",
-    CLOSED: "destructive",
+    ACTIVE: "primary",
+    INACTIVE: "neutral",
+    CLOSED: "error",
   };
 
   const isClosed = warehouse.status === "CLOSED";
@@ -132,9 +133,10 @@ function WarehouseTreeNode(props: {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              <Badge variant={statusVariant[warehouse.status]}>
-                {warehouse.status}
-              </Badge>
+              <StatusBadge
+                label={formatEnum(warehouse.status)}
+                variant={statusVariant[warehouse.status] ?? "neutral"}
+              />
 
               <Button
                 variant="ghost"

@@ -1,15 +1,11 @@
-export type FieldOfWork =
-  | "ADMIN"
-  | "INVENTORY_MANAGER"
-  | "WAREHOUSE_OPERATOR"
-  | "DRIVER";
-
 export const FIELD_OF_WORK = [
   "ADMIN",
   "INVENTORY_MANAGER",
   "WAREHOUSE_OPERATOR",
   "DRIVER",
-];
+] as const;
+
+export type FieldOfWork = (typeof FIELD_OF_WORK)[number];
 
 export interface User {
   userId: string;

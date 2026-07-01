@@ -20,6 +20,7 @@ import { useState } from "react";
 import { getChildLocations } from "../api/locationApi";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
+import { StatusBadge } from "@/components/common/StatusBadge";
 
 const NEXT_TYPE_LABEL: Record<LocationType, string | null> = {
   ZONE: "Add Row",
@@ -142,9 +143,10 @@ function LocationTreeNode(props: {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              <Badge variant={location.active ? "default" : "secondary"}>
-                {location.active ? "Active" : "Inactive"}
-              </Badge>
+              <StatusBadge
+                label={location.active ? "Active" : "Inactive"}
+                variant={location.active ? "primary" : "neutral"}
+              />
 
               <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                 {addLabel && (
@@ -195,7 +197,7 @@ function LocationTreeNode(props: {
                   className="size-7"
                   onClick={() => deleteLocation()}
                 >
-                  <Trash className="text-primary"/>
+                  <Trash className="text-primary" />
                 </Button>
               </div>
             </div>

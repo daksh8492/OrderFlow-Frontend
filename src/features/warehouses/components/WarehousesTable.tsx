@@ -1,6 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import type { Warehouse, WarehouseStatus } from "../types/warehouse";
-import Table from "@/components/common/Table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +12,18 @@ import EditWarehouseDialog from "./EditWarehouseDialog";
 import type { WarehouseFormData } from "../schema/warehouseSchema";
 import { useState } from "react";
 import EditWarehouseStatusDialog from "./EditWarehouseStatusDialog";
+import { StatusBadge } from "@/components/common/StatusBadge";
+import { formatEnum } from "@/utils/format";
+import DataTable from "@/components/common/DataTable";
+
+const statusVariant: Record<
+  string,
+  "primary" | "warning" | "error" | "info" | "neutral"
+> = {
+  ACTIVE: "primary",
+  INACTIVE: "neutral",
+  CLOSED: "error",
+};
 
 function WarehousesTable(props: {
   warehouses: Warehouse[];
@@ -61,28 +72,12 @@ function WarehousesTable(props: {
     }),
     columnsHelper.accessor("status", {
       header: "Status",
-      cell: (info) => {
-        const status = info.getValue();
-        if (status === "ACTIVE") {
-          return (
-            <span className="rounded-full bg-accent px-3 py-1 text-xs font-medium">
-              Active
-            </span>
-          );
-        } else if (status === "INACTIVE") {
-          return (
-            <span className="rounded-full border px-3 py-1 text-xs font-medium">
-              Inactive
-            </span>
-          );
-        } else {
-          return (
-            <span className="rounded-full border px-3 py-1 text-xs font-medium">
-              Closed
-            </span>
-          );
-        }
-      },
+      cell: (info) => (
+        <StatusBadge
+          label={formatEnum(info.getValue())}
+          variant={statusVariant[info.getValue()] ?? "neutral"}
+        />
+      ),
     }),
     columnsHelper.accessor("locationIds", {
       header: "Locations",
@@ -106,7 +101,6 @@ function WarehousesTable(props: {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {/* Update status add krna h dialog box 3 option h import kr  liya h function dikkat a dropdown se dialog add krenge to dialog band hojata h*/}
                 <DropdownMenuItem onClick={() => setStatusDialog(true)}>
                   Status
                 </DropdownMenuItem>
@@ -134,7 +128,7 @@ function WarehousesTable(props: {
 
   return (
     <div>
-      <Table
+      <DataTable
         columns={columns}
         data={warehouses}
         onPageChange={onPageChange}

@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import type { Warehouse } from "@/features/warehouses/types/warehouse";
 import { getWarehouses } from "@/features/warehouses/api/warehouseApi";
+import { formatEnum } from "@/utils/format";
 
 function UserForm(props: {
   defaultValues?: UserFormData;
@@ -79,7 +80,7 @@ function UserForm(props: {
                 <SelectContent>
                   {FIELD_OF_WORK.map((field) => (
                     <SelectItem key={field} value={field}>
-                      {field.replaceAll("_", " ")}
+                      {formatEnum(field)}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -10,10 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Table from "@/components/common/Table";
 import { useEffect, useState } from "react";
 import { getWarehouses } from "@/features/warehouses/api/warehouseApi";
 import { type Warehouse } from "@/features/warehouses/types/warehouse";
+import { formatEnum } from "@/utils/format";
+import { StatusBadge } from "@/components/common/StatusBadge";
+import DataTable from "@/components/common/DataTable";
 
 function UsersTable(props: {
   users: User[];
@@ -59,8 +61,8 @@ function UsersTable(props: {
   }, []);
 
   const warehouseMap = new Map<string, string>(
-    warehouses.map((wh) => [wh.warehouseId, wh.name])
-  )
+    warehouses.map((wh) => [wh.warehouseId, wh.name]),
+  );
 
   const columnHelper = createColumnHelper<User>();
 
@@ -77,12 +79,12 @@ function UsersTable(props: {
 
     columnHelper.accessor("fieldOfWork", {
       header: "Role",
-      cell: (info) => info.getValue(),
+      cell: (info) => formatEnum(info.getValue()),
     }),
 
     columnHelper.accessor("warehouseId", {
       header: "Warehouse",
-      cell: (info) => warehouseMap.get(info.getValue()) ?? "-"
+      cell: (info) => warehouseMap.get(info.getValue()) ?? "-",
     }),
 
     columnHelper.accessor("city", {
@@ -92,16 +94,12 @@ function UsersTable(props: {
 
     columnHelper.accessor("active", {
       header: "Status",
-      cell: (info) =>
-        info.getValue() ? (
-          <span className="rounded-full bg-accent px-3 py-1 text-xs font-medium">
-            Active
-          </span>
-        ) : (
-          <span className="rounded-full border px-3 py-1 text-xs font-medium">
-            Inactive
-          </span>
-        ),
+      cell: (info) => (
+        <StatusBadge
+          label={info.getValue() ? "Active" : "Inactive"}
+          variant={info.getValue() ? "primary" : "neutral"}
+        />
+      ),
     }),
 
     columnHelper.display({
@@ -148,7 +146,7 @@ function UsersTable(props: {
   ];
 
   return (
-    <Table
+    <DataTable
       columns={columns}
       data={users}
       onPageChange={onPageChange}

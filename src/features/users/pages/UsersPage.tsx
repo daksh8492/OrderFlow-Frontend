@@ -14,16 +14,9 @@ import {
 } from "../api/userApi";
 import UsersTable from "../components/UsersTable";
 import AddUserForm from "../components/AddUserDialog";
-import { Input } from "@/components/ui/input";
 import type { UserFormData } from "../schema/userSchema";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import TableToolbar from "@/components/common/TableToolbar";
 
 function UserPage() {
   const [usersPage, setUsersPage] = useState<PageResponse<User> | null>(null);
@@ -31,13 +24,13 @@ function UserPage() {
   const [size, setSize] = useState(10);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("ALL");
+  const [roleFilter, setRoleFilter] = useState<FieldOfWork>();
 
   const fetchUsers = async () => {
     let response;
     if (search.trim().length > 0) {
       response = await searchUsers(search, page, size);
-    } else if (roleFilter != "ALL") {
+    } else if (roleFilter) {
       response = await getUsersByFieldOfWork(
         roleFilter as FieldOfWork,
         page,
@@ -120,11 +113,11 @@ function UserPage() {
 
   const handleSearchChange = (query: string) => {
     setSearchInput(query);
-    setRoleFilter("ALL");
+    setRoleFilter(undefined);
     setPage(0);
   };
 
-  const handleRoleChange = (role: string) => {
+  const handleRoleChange = (role: FieldOfWork | undefined) => {
     setRoleFilter(role);
     setSearchInput("");
     setPage(0);
@@ -149,31 +142,24 @@ function UserPage() {
         <p className="text-muted-foreground">Manage users and their roles.</p>
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Input
-          placeholder="Search users..."
-          className="max-w-sm"
-          value={searchInput}
-          onChange={(e) => handleSearchChange(e.target.value)}
-        />
-        <Select
-          value={roleFilter}
-          onValueChange={(value) => handleRoleChange(value)}
-        >
-          <SelectTrigger className="w-56">
-            <SelectValue placeholder="Filter by role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All Roles</SelectItem>
-            {FIELD_OF_WORK.map((role) => (
-              <SelectItem key={role} value={role}>
-                {role.replaceAll("_", " ")}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <AddUserForm handleAddUser={handleAddUser} />
-      </div>
+      <TableToolbar
+        search={{
+          placeholder: "Search users...",
+          value: searchInput,
+          onChange: handleSearchChange,
+        }}
+        filters={[
+          {
+            placeholder: "Role",
+            value: roleFilter,
+            onChange: (value) =>
+              handleRoleChange(value as FieldOfWork | undefined),
+            allLabel: "All",
+            options: FIELD_OF_WORK,
+          },
+        ]}
+        actions={<AddUserForm handleAddUser={handleAddUser} />}
+      />
 
       {usersPage ? (
         <UsersTable
