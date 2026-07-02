@@ -30,8 +30,8 @@ function ItemForm(props: {
     defaultValues: props.defaultValues,
   });
 
-  const handleSubmit = async (data: ItemFormData) => {
-    await props.onSubmit(data);
+  const handleSubmit = (data: ItemFormData) => {
+    props.onSubmit(data);
   };
 
   return (

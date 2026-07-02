@@ -25,7 +25,7 @@ function DataTable<TData>(props: {
   totalElements: number;
   onPageChange: (page: number) => void;
   onSizeChange: (size: number) => void;
-  onRowClick: (row: TData) => void;
+  onRowClick?: (row: TData) => void;
 }) {
   const {
     columns,

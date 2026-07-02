@@ -107,3 +107,8 @@ export const discontinueVariant = async (variantId: string) => {
   const response = await api.patch(`/variants/${variantId}/discontinue`);
   return response;
 };
+
+export const getVariantsByIds = async (variantIds: string[]) => {
+  const response = await api.post(`/variants/ids`, variantIds);
+  return response.data as Variant[];
+}

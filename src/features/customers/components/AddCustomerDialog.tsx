@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import type { ItemFormData } from "../schema/itemSchema";
-import ItemForm from "./ItemForm";
+import type { CustomerFormData } from "../schema/customerSchema";
+import CustomerForm from "./CustomerForm";
 
-function AddItemDialog(props: {
-  handleAddItem: (newItem: ItemFormData) => void;
+function AddCustomerDialog(props: {
+  handleAddCustomer: (data: CustomerFormData) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const onSubmit = (data: ItemFormData) => {
-    props.handleAddItem(data);
+  const onSubmit = (data: CustomerFormData) => {
+    props.handleAddCustomer(data);
     setOpen(false);
   };
 
@@ -24,17 +24,17 @@ function AddItemDialog(props: {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus /> Add Item
+          <Plus /> Add Customer
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-lg">Add Item</DialogTitle>
+          <DialogTitle className="text-lg">Add Customer</DialogTitle>
         </DialogHeader>
-        <ItemForm onSubmit={onSubmit} submitText="Add Item" />
+        <CustomerForm onSubmit={onSubmit} submitText="Add Customer" />
       </DialogContent>
     </Dialog>
   );
 }
 
-export default AddItemDialog;
+export default AddCustomerDialog;

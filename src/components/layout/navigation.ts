@@ -1,5 +1,5 @@
 import type { NavItem } from "@/types/navItems";
-import { LayoutDashboard, LocationEdit, ShoppingCart, Users, Warehouse } from "lucide-react";
+import { Handshake, LayoutDashboard, LocationEdit, ShoppingBag, ShoppingCart, UserCog, Users, Warehouse } from "lucide-react";
 
 export const NAV_ITEMS: NavItem[] = [
     {
@@ -11,7 +11,7 @@ export const NAV_ITEMS: NavItem[] = [
   {
     title: "Users",
     path: "/app/users",
-    icon: Users,
+    icon: UserCog,
     roles: ["ADMIN"],
   },
   {
@@ -31,5 +31,17 @@ export const NAV_ITEMS: NavItem[] = [
     path: "/app/items",
     icon: ShoppingCart,
     roles: ["ADMIN", "INVENTORY_MANAGER"],
+  },
+  {
+    title: "Customers",
+    path: "/app/customers",
+    icon: Handshake,
+    roles: ["ADMIN", "INVENTORY_MANAGER"]
+  },
+  {
+    title: "Vendors",
+    path: "/app/vendors",
+    icon: ShoppingBag,
+    roles: ["ADMIN", "INVENTORY_MANAGER"]
   },
 ]

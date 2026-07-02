@@ -9,6 +9,8 @@ import WarehousesPage from "@/features/warehouses/pages/WarehousesPage";
 import ItemPage from "@/features/items/pages/ItemPage";
 import LocationPage from "@/features/locations/pages/LocationPage";
 import ItemDetailPage from "@/features/items/pages/ItemDetailPage";
+import CustomerPage from "@/features/customers/pages/CustomerPage";
+import VendorsPage from "@/features/vendors/pages/VendorsPage";
 
 function AppRoutes() {
   return (
@@ -25,6 +27,8 @@ function AppRoutes() {
             <Route path="locations/*" element={<LocationPage/>}/>
             <Route path="items" element={<ItemPage/>}/>
             <Route path="items/:id" element={<ItemDetailPage/>}/>
+            <Route path="customers/*" element={<CustomerPage/>}/>
+            <Route path="vendors/*" element={<VendorsPage/>}/>
           </Route>
         </Route>
       </Routes>
