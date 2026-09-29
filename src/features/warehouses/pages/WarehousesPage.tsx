@@ -12,8 +12,7 @@ import WarehousesTable from "../components/WarehousesTable";
 import AddWarehouseDialog from "../components/AddWarehouseDialog";
 import type { WarehouseFormData } from "../schema/warehouseSchema";
 import { toast } from "sonner";
-import TableToolbar from "@/components/common/TableToolbar";
-import { Warehouse as WarehouseIcon, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 
 function WarehousesPage() {
   const [warehousePage, setWarehousePage] =

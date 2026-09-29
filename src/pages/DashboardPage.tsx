@@ -55,7 +55,7 @@ function DashboardStatCard({
 function DashboardPage() {
   const [recentOrders, setRecentOrders] = useState<OrderSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const user = useAppSelector((state) => state.auth.user);
+  useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -182,7 +182,7 @@ function DashboardPage() {
                           {order.orderNumber}
                         </Link>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {new Date(order.orderDate).toLocaleDateString()} · {order.customerName}
+                          {new Date(order.orderDate).toLocaleDateString()} · {order.receiverName}
                         </p>
                       </div>
                     </div>

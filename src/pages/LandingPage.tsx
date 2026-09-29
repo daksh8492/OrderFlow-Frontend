@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import {
   Waypoints, ArrowRight, Boxes, ShieldCheck, BarChart3,

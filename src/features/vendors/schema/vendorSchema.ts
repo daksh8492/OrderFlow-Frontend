@@ -59,7 +59,7 @@ export const vendorSchema = z.object({
     .min(1, "Payment terms are required")
     .max(100, "Payment terms cannot exceed 100 characters"),
 
-  minimumOrderValue: z.coerce
+  minimumOrderValue: z
     .number()
     .min(0, "Minimum order value cannot be negative")
     .optional(),

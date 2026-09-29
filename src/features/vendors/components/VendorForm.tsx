@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Controller, useForm, type Resolver } from "react-hook-form";
+import { Controller, useForm} from "react-hook-form";
 import { type VendorFormData, vendorSchema } from "../schema/vendorSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 

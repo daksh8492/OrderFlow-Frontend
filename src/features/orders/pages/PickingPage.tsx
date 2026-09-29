@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { ClipboardList, ExternalLink, Package, Loader2, ArrowLeft, ArrowRight, MoveLeft, MoveRight, CheckCircle2, ChevronRight, AlertCircle, Sparkles } from "lucide-react";
 
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { type Order, type OrderSummary, type OrderItem } from "../types/order";
+import { type Order, type OrderSummary} from "../types/order";
 import { getPickableOrders, getOrderById } from "../apis/orderApi";
 import { createPicking, getPickingsByWarehouse, getPickingById, deletePicking, type PickingSummaryDto } from "../apis/pickingApi";
 import { getWarehouseStocksByVariant, type WarehouseStock } from "@/features/warehouse-stock/api/warehouseStockApi";
