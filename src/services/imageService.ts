@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME ?? "djmocikal";
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 const UPLOAD_PRESET =
-  import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET ?? "orderflow_upload";
+  import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
