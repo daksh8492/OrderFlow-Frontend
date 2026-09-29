@@ -109,53 +109,55 @@ function WarehouseTreeNode(props: {
           isClosed || isInactive ? "opacity-60" : ""
         }`}
       >
-        <CollapsibleTrigger onClick={toggle} asChild>
-          <Button
-            variant="ghost"
-            disabled={loading}
-            className="h-16 w-full justify-start rounded-xl bg-transparent px-4 hover:bg-transparent"
-          >
-            <ChevronRightIcon
-              className={`mr-3 h-4 w-4 shrink-0 transition-transform duration-200 ${
-                open ? "rotate-90" : ""
-              }`}
-            />
-
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <WarehouseIcon className="h-5 w-5 text-primary" />
-            </div>
-
-            <div className="ml-3 flex flex-col items-start">
-              <span className="font-semibold">{warehouse.name}</span>
-              <span className="text-xs text-muted-foreground">
-                {warehouse.code}
-              </span>
-            </div>
-
-            <div className="ml-auto flex items-center gap-2">
-              <StatusBadge
-                label={formatEnum(warehouse.status)}
-                variant={statusVariant[warehouse.status] ?? "neutral"}
+        <div className="flex h-16 w-full items-center justify-start rounded-xl bg-transparent px-4 select-none">
+          <CollapsibleTrigger onClick={toggle} asChild>
+            <button
+              disabled={loading}
+              className="flex items-center flex-1 text-left h-full focus:outline-none"
+            >
+              <ChevronRightIcon
+                className={`mr-3 h-4 w-4 shrink-0 transition-transform duration-200 ${
+                  open ? "rotate-90" : ""
+                }`}
               />
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={() => {
-                  addChildLocation({
-                    locationType: "ZONE",
-                    warehouseId: warehouse.warehouseId,
-                  });
-                  setOpen(false);
-                  setLocations(null);
-                }}
-              >
-                <PlusIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          </Button>
-        </CollapsibleTrigger>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <WarehouseIcon className="h-5 w-5 text-primary" />
+              </div>
+
+              <div className="ml-3 flex flex-col items-start">
+                <span className="font-semibold">{warehouse.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {warehouse.code}
+                </span>
+              </div>
+            </button>
+          </CollapsibleTrigger>
+
+          <div className="ml-auto flex items-center gap-2">
+            <StatusBadge
+              label={formatEnum(warehouse.status)}
+              variant={statusVariant[warehouse.status] ?? "neutral"}
+            />
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                addChildLocation({
+                  locationType: "ZONE",
+                  warehouseId: warehouse.warehouseId,
+                });
+                setOpen(false);
+                setLocations(null);
+              }}
+            >
+              <PlusIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
         <CollapsibleContent className="ml-6 border-l border-border pl-6 pb-3">
           {loading ? (

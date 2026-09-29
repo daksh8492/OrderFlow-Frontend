@@ -112,3 +112,8 @@ export const getVariantsByIds = async (variantIds: string[]) => {
   const response = await api.post(`/variants/ids`, variantIds);
   return response.data as Variant[];
 }
+
+export const getVariantById = async (variantId: string) => {
+  const response = await api.get(`/variants/${variantId}`);
+  return response.data as Variant;
+}

@@ -116,93 +116,100 @@ function LocationTreeNode(props: {
           isDimmed ? "opacity-60" : ""
         }`}
       >
-        <CollapsibleTrigger onClick={toggle} asChild>
-          <Button
-            variant="ghost"
-            disabled={loading}
-            className="h-14 w-full justify-start rounded-lg bg-transparent px-3 hover:bg-transparent"
-          >
-            <ChevronRightIcon
-              className={`mr-3 h-4 w-4 shrink-0 transition-transform duration-200 ${
-                open ? "rotate-90" : ""
-              }`}
-            />
-
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent">
-              <Icon className="h-4 w-4 text-primary" />
-            </div>
-
-            <div className="ml-3 flex flex-col items-start">
-              <span className="font-medium">
-                {location.locationName ?? location.code}
-              </span>
-
-              <span className="text-xs text-muted-foreground">
-                {location.locationType} • {location.code}
-              </span>
-            </div>
-
-            <div className="ml-auto flex items-center gap-2">
-              <StatusBadge
-                label={location.active ? "Active" : "Inactive"}
-                variant={location.active ? "primary" : "neutral"}
+        <div className="flex h-14 w-full items-center justify-start rounded-lg bg-transparent px-3 select-none">
+          <CollapsibleTrigger onClick={toggle} asChild>
+            <button
+              disabled={loading}
+              className="flex items-center flex-1 text-left h-full focus:outline-none"
+            >
+              <ChevronRightIcon
+                className={`mr-3 h-4 w-4 shrink-0 transition-transform duration-200 ${
+                  open ? "rotate-90" : ""
+                }`}
               />
 
-              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                {addLabel && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-7"
-                    onClick={() => {
-                      addChildLocation({
-                        locationType: CHILD_TYPE[location.locationType],
-                        parentLocationId: location.locationId,
-                      });
-                      setOpen(false);
-                      setChildren(null);
-                    }}
-                  >
-                    <PlusIcon className="size-4" />
-                  </Button>
-                )}
+              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent">
+                <Icon className="h-4 w-4 text-primary" />
+              </div>
 
-                {location.active ? (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-7"
-                    onClick={() => {
-                      deactivateLocation();
-                    }}
-                  >
-                    <PauseIcon className="size-4" />
-                  </Button>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-7"
-                    onClick={() => {
-                      activateLocation();
-                    }}
-                  >
-                    <PlayIcon className="size-4" />
-                  </Button>
-                )}
+              <div className="ml-3 flex flex-col items-start">
+                <span className="font-medium">
+                  {location.locationName ?? location.code}
+                </span>
 
+                <span className="text-xs text-muted-foreground">
+                  {location.locationType} • {location.code}
+                </span>
+              </div>
+            </button>
+          </CollapsibleTrigger>
+
+          <div className="ml-auto flex items-center gap-2">
+            <StatusBadge
+              label={location.active ? "Active" : "Inactive"}
+              variant={location.active ? "primary" : "neutral"}
+            />
+
+            <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+              {addLabel && (
                 <Button
                   variant="ghost"
                   size="icon"
                   className="size-7"
-                  onClick={() => deleteLocation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addChildLocation({
+                      locationType: CHILD_TYPE[location.locationType],
+                      parentLocationId: location.locationId,
+                    });
+                    setOpen(false);
+                    setChildren(null);
+                  }}
                 >
-                  <Trash className="text-primary" />
+                  <PlusIcon className="size-4" />
                 </Button>
-              </div>
+              )}
+
+              {location.active ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deactivateLocation();
+                  }}
+                >
+                  <PauseIcon className="size-4" />
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    activateLocation();
+                  }}
+                >
+                  <PlayIcon className="size-4" />
+                </Button>
+              )}
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-7"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteLocation();
+                }}
+              >
+                <Trash className="text-primary size-4" />
+              </Button>
             </div>
-          </Button>
-        </CollapsibleTrigger>
+          </div>
+        </div>
 
         <CollapsibleContent className="ml-5 border-l border-border pl-5 pb-2">
           {loading ? (

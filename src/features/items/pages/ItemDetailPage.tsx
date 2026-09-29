@@ -10,7 +10,6 @@ import {
   getItemById,
   updateVariant,
 } from "../api/itemApi";
-import { Spinner } from "@/components/ui/spinner";
 import ItemHeader from "../components/itemDetail/ItemHeader";
 import VariantSeletor from "../components/itemDetail/VariantSeletor";
 import ImageGallery from "../components/itemDetail/ImageGallery";
@@ -19,6 +18,7 @@ import SpecificationsCard from "../components/itemDetail/SpecificationsCard";
 import AddVariantDialog from "../components/itemDetail/AddVariantDialog";
 import type { VariantFormData } from "../schema/variantSchema";
 import { toast } from "sonner";
+import { Loader2, Layers } from "lucide-react";
 
 const itemStatusVariant = {
   DRAFT: "warning",
@@ -128,58 +128,84 @@ function ItemDetailPage() {
     fetchItem();
   }, []);
 
+  /* ─── Loading ─────────────────────────────────────── */
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
-  if (item)
-    return (
-      <div className="mx-auto max-w-7xl space-y-8 p-6">
-        <ItemHeader
-          category={item.category}
-          itemStatusVariant={itemStatusVariant}
-          name={item.name}
-          sourceType={item.sourceType}
-          status={item.status}
-        />
+  /* ─── Not found ───────────────────────────────────── */
+  if (!item) return null;
 
-        <AddVariantDialog handleAddVariant={handleAddVariant} />
+  /* ─── Main content ────────────────────────────────── */
+  return (
+    <div className="mx-auto w-full max-w-7xl space-y-4 p-5">
+      {/* Item header card with back nav */}
+      <ItemHeader
+        category={item.category}
+        itemStatusVariant={itemStatusVariant}
+        name={item.name}
+        sourceType={item.sourceType}
+        status={item.status}
+      />
 
-        {item.variants.length ? (
-          <div className="space-y-8">
-            <div className="space-y-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Variants
-              </h2>
+      {item.variants.length > 0 ? (
+        <div className="space-y-4">
+          {/* Variant selector card + Add button */}
+          <div className="flex items-start gap-3">
+            <div className="flex-1 min-w-0">
               <VariantSeletor
                 selectedVariant={selectedVariant}
                 setSelectedVariant={setSelectedVariant}
                 variants={item.variants}
               />
             </div>
-
-            <div className="rounded-2xl border bg-card p-8 shadow-sm">
-              <div className="grid gap-10 lg:grid-cols-12">
-                <ImageGallery imageUrls={selectedVariant?.imageUrls ?? []} />
-                <VariantDetails
-                  handleUpdateVariant={handleupdateVariant}
-                  selectedVariant={selectedVariant}
-                  variantStatus={variantStatus}
-                  handleDeleteVariant={handleDeleteVariant}
-                  handleActivateVariant={handleActivateVariant}
-                  handleDeactivateVariant={handleDeactivateVariant}
-                  handleDiscontinueVariant={handleDiscontinueVariant}
-                />
-              </div>
+            <div className="pt-1">
+              <AddVariantDialog handleAddVariant={handleAddVariant} />
             </div>
-
-            <SpecificationsCard selectedVariant={selectedVariant} />
           </div>
-        ) : (
-          <div>No variants added please add a variant</div>
-        )}
-      </div>
-    );
+
+          {/* Main variant detail card */}
+          <div className="rounded-xl border bg-card p-5 shadow-sm">
+            <div className="grid gap-8 lg:grid-cols-12">
+              <ImageGallery imageUrls={selectedVariant?.imageUrls ?? []} />
+              <VariantDetails
+                handleUpdateVariant={handleupdateVariant}
+                selectedVariant={selectedVariant}
+                variantStatus={variantStatus}
+                handleDeleteVariant={handleDeleteVariant}
+                handleActivateVariant={handleActivateVariant}
+                handleDeactivateVariant={handleDeactivateVariant}
+                handleDiscontinueVariant={handleDiscontinueVariant}
+              />
+            </div>
+          </div>
+
+          {/* Specifications */}
+          <SpecificationsCard selectedVariant={selectedVariant} />
+        </div>
+      ) : (
+        /* Empty state — no variants */
+        <div className="rounded-xl border bg-card">
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center px-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border bg-muted">
+              <Layers className="h-6 w-6 text-muted-foreground/60" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">No variants yet</p>
+              <p className="mt-1 text-xs text-muted-foreground max-w-xs">
+                This item has no variants. Add a variant to define SKUs, pricing, and inventory.
+              </p>
+            </div>
+            <AddVariantDialog handleAddVariant={handleAddVariant} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default ItemDetailPage;

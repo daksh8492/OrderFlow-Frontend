@@ -13,6 +13,7 @@ import AddWarehouseDialog from "../components/AddWarehouseDialog";
 import type { WarehouseFormData } from "../schema/warehouseSchema";
 import { toast } from "sonner";
 import TableToolbar from "@/components/common/TableToolbar";
+import { Warehouse as WarehouseIcon, Building2 } from "lucide-react";
 
 function WarehousesPage() {
   const [warehousePage, setWarehousePage] =
@@ -80,28 +81,32 @@ function WarehousesPage() {
   }, [page, size]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Warehouses</h1>
-        <p className="text-muted-foreground">Manage Warehouses.</p>
+    <div className="p-6 md:p-8 space-y-6 max-w-7xl mx-auto animate-in fade-in duration-300">
+      <div className="flex justify-end gap-3 mb-2">
+        <AddWarehouseDialog handleAddWarehouse={handleAddWarehouse} />
       </div>
-      <TableToolbar actions={<AddWarehouseDialog handleAddWarehouse={handleAddWarehouse} />}/>
-      {warehousePage ? (
-        <WarehousesTable
-          warehouses={warehousePage.content}
-          onPageChange={setPage}
-          onSizeChange={setSize}
-          page={page}
-          size={size}
-          totalElements={warehousePage.totalElements}
-          totalPages={warehousePage.totalPages}
-          handleDeleteWarehouse={handleDeleteWarehouse}
-          handleUpdateWarehouse={handleUpdateWarehouse}
-          handleUpdateWarehouseStatus={handleUpdateWarehouseStatus}
-        />
-      ) : (
-        <p>Warehouse not found</p>
-      )}
+
+      <div className="rounded-xl border border-border/60 bg-card shadow-sm overflow-hidden">
+        {warehousePage ? (
+          <WarehousesTable
+            warehouses={warehousePage.content}
+            onPageChange={setPage}
+            onSizeChange={setSize}
+            page={page}
+            size={size}
+            totalElements={warehousePage.totalElements}
+            totalPages={warehousePage.totalPages}
+            handleDeleteWarehouse={handleDeleteWarehouse}
+            handleUpdateWarehouse={handleUpdateWarehouse}
+            handleUpdateWarehouseStatus={handleUpdateWarehouseStatus}
+          />
+        ) : (
+          <div className="py-16 text-center text-muted-foreground">
+            <Building2 className="h-10 w-10 mx-auto mb-4 opacity-20" />
+            <p className="text-sm font-medium">Loading warehouses...</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

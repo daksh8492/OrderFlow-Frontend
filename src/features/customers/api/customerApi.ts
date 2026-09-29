@@ -18,6 +18,11 @@ export const getCustomers = async (
   return response.data as PageResponse<Customer>;
 };
 
+export const getCustomerById = async (customerId: string) => {
+  const response = await api.get(`/customers/${customerId}`);
+  return response.data as Customer;
+}
+
 export const addCustomer = async (data: CustomerFormData) => {
   const response = await api.post(`/customers`, data);
   return response.data as Customer;

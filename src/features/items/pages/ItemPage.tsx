@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import AddItemDialog from "../components/AddItemDialog";
 import type { ItemFormData } from "../schema/itemSchema";
 import { useNavigate } from "react-router";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
+import { Loader2 } from "lucide-react";
 
 function ItemPage() {
   const [itemsPage, setItemsPage] =
@@ -24,33 +26,41 @@ function ItemPage() {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
 
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const { searchInput, search, setSearchInput } = useDebouncedSearch(500, () => setPage(0));
 
   const [status, setStatus] = useState<ItemStatus>();
   const [category, setCategory] = useState<ItemCategory>();
   const [source, setSource] = useState<InwardSource>();
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const fetchItems = async () => {
-    const response = await getItems(
-      page,
-      size,
-      search,
-      category,
-      status,
-      source,
-    );
-    setItemsPage(response);
+    setLoading(true);
+    try {
+      const response = await getItems(
+        page,
+        size,
+        search,
+        category,
+        status,
+        source,
+      );
+      setItemsPage(response);
+    } catch (error) {
+      toast.error("Failed to load items");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteItem = (id: string) => {
     deleteItem(id);
     setPage(0);
-}
+  }
 
-const handleDeactivateItem = async (id: string) => {
+  const handleDeactivateItem = async (id: string) => {
     try {
       await deactivateItem(id);
       toast.success("Item successfully deactivated");
@@ -89,7 +99,7 @@ const handleDeactivateItem = async (id: string) => {
       toast.success("Item successfully added");
       await fetchItems();
     } catch (error) {
-      toast.error("Item could not be aded");
+      toast.error("Item could not be added");
       console.error("Item adding error: ", error);
     }
   };
@@ -106,88 +116,92 @@ const handleDeactivateItem = async (id: string) => {
   };
 
   const onRowClick = (item: ItemSummary) => {
-   navigate(`/app/items/${item.itemId}`);
+    navigate(`/app/items/${item.itemId}`);
   }
-
 
   useEffect(() => {
     fetchItems();
   }, [page, size, search, category, status, source]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(searchInput);
-      setPage(0);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
   return (
-    <div className="space-y-6">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">Items</h1>
+    <div className="mx-auto w-full max-w-7xl space-y-4 p-5">
+      {/* Toolbar */}
+      <div className="rounded-xl border bg-card p-3">
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <TableToolbar
+              search={{
+                placeholder: "Search items...",
+                value: searchInput,
+                onChange: setSearchInput,
+              }}
+              filters={[
+                {
+                  placeholder: "Status",
+                  value: status,
+                  onChange: (value) => setStatus(value as ItemStatus | undefined),
+                  allLabel: "All",
+                  options: ITEM_STATUS,
+                },
+                {
+                  placeholder: "Category",
+                  value: category,
+                  onChange: (value) => setCategory(value as ItemCategory | undefined),
+                  allLabel: "All",
+                  options: ITEM_CATEGORY,
+                },
+                {
+                  placeholder: "Source",
+                  value: source,
+                  onChange: (value) => setSource(value as InwardSource | undefined),
+                  allLabel: "All",
+                  options: INWARD_SOURCE,
+                },
+              ]}
+              actions={<AddItemDialog handleAddItem={handleAddItem} />}
+            />
+          </div>
         </div>
-
-        <p className="mt-1 text-sm text-muted-foreground">
-          Manage your inventory items.
-        </p>
       </div>
 
-      <TableToolbar
-        search={{
-          placeholder: "Search items...",
-          value: searchInput,
-          onChange: setSearchInput,
-        }}
-        filters={[
-          {
-            placeholder: "Status",
-            value: status,
-            onChange: (value) => setStatus(value as ItemStatus | undefined),
-            allLabel: "All",
-            options: ITEM_STATUS,
-          },
-          {
-            placeholder: "Category",
-            value: category,
-            onChange: (value) => setCategory(value as ItemCategory | undefined),
-            allLabel: "All",
-            options: ITEM_CATEGORY,
-          },
-          {
-            placeholder: "Source",
-            value: source,
-            onChange: (value) => setSource(value as InwardSource | undefined),
-            allLabel: "All",
-            options: INWARD_SOURCE,
-          },
-        ]}
-        actions={<AddItemDialog handleAddItem={handleAddItem}/>}
-      />
-
-      {itemsPage ? (
-        <ItemsTable
-          items={itemsPage.content}
-          page={page}
-          size={size}
-          totalElements={itemsPage.totalElements}
-          totalPages={itemsPage.totalPages}
-          onPageChange={setPage}
-          onSizeChange={setSize}
-          handleDelete={handleDeleteItem}
-          handleActivateItem={handleActivateItem}
-          handleDeactivateItem={handleDeactivateItem}
-          handleDiscontinueItem={handleDiscontinueItem}
-          handleEditItem={handleEditItem}
-          onRowClick={onRowClick}
-          />
-      ) : (
-        <div className="flex h-64 items-center justify-center text-muted-foreground">
-          Loading items...
+      {/* Item count */}
+      {itemsPage && (
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs text-muted-foreground">
+            {itemsPage.totalElements}{" "}
+            {itemsPage.totalElements === 1 ? "item" : "items"}
+          </span>
         </div>
       )}
+
+      {/* Table */}
+      <div className="rounded-xl border bg-card overflow-hidden">
+        {loading ? (
+          <div className="flex h-64 items-center justify-center">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+          </div>
+        ) : itemsPage ? (
+          <ItemsTable
+            items={itemsPage.content}
+            page={page}
+            size={size}
+            totalElements={itemsPage.totalElements}
+            totalPages={itemsPage.totalPages}
+            onPageChange={setPage}
+            onSizeChange={setSize}
+            handleDelete={handleDeleteItem}
+            handleActivateItem={handleActivateItem}
+            handleDeactivateItem={handleDeactivateItem}
+            handleDiscontinueItem={handleDiscontinueItem}
+            handleEditItem={handleEditItem}
+            onRowClick={onRowClick}
+          />
+        ) : (
+          <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+            No items found.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

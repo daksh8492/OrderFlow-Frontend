@@ -1,9 +1,9 @@
-import type {LucideIcon} from "lucide-react"
-import type { FieldOfWork } from "../features/users/types/user"
+import type { LucideIcon } from "lucide-react";
 
-export interface NavItem {
-    title: string
-    path: string
-    icon: LucideIcon
-    roles: FieldOfWork[]    
-}
+export type NavItem = {
+    title: string;
+    path?: string;
+    icon: LucideIcon;
+    roles: string[];
+    children?: NavItem[];
+};

@@ -17,13 +17,13 @@ import AddUserForm from "../components/AddUserDialog";
 import type { UserFormData } from "../schema/userSchema";
 import { toast } from "sonner";
 import TableToolbar from "@/components/common/TableToolbar";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 
 function UserPage() {
   const [usersPage, setUsersPage] = useState<PageResponse<User> | null>(null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const { searchInput, search, setSearchInput } = useDebouncedSearch(500, () => setPage(0));
   const [roleFilter, setRoleFilter] = useState<FieldOfWork>();
 
   const fetchUsers = async () => {
@@ -114,7 +114,6 @@ function UserPage() {
   const handleSearchChange = (query: string) => {
     setSearchInput(query);
     setRoleFilter(undefined);
-    setPage(0);
   };
 
   const handleRoleChange = (role: FieldOfWork | undefined) => {
@@ -127,13 +126,6 @@ function UserPage() {
     fetchUsers();
   }, [page, size, search, roleFilter]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(searchInput);
-      setPage(0);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
 
   return (
     <div className="space-y-6">

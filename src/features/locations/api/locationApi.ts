@@ -34,3 +34,8 @@ export const deleteLocation = async (locationId: string) => {
   const response = await api.delete(`/locations/${locationId}`);
   return response.data;
 };
+
+export const getLocationById = async (locationId: string): Promise<Location> => {
+  const response = await api.get(`/locations/${locationId}`);
+  return response.data as Location;
+};
