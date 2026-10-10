@@ -131,7 +131,7 @@ function LoginPage() {
               "Spring Boot 3",
               "React 19",
               "TypeScript",
-              "PostgreSQL",
+              "MySQL",
               "JWT",
               "Tailwind",
             ].map((t) => (
