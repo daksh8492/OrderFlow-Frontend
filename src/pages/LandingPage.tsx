@@ -14,7 +14,7 @@ const techStack = [
   { label: "React 19", color: "#61DAFB" },
   { label: "TypeScript", color: "#3178C6" },
   { label: "Spring Boot", color: "#6DB33F" },
-  { label: "PostgreSQL", color: "#336791" },
+  { label: "MySQL", color: "#336791" },
   { label: "JWT Auth", color: "#FB923C" },
   { label: "Tailwind CSS", color: "#38BDF8" },
 ];
@@ -247,7 +247,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <a
-              href="https://github.com"
+              href="https://github.com/daksh8492/OrderFlow/"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
@@ -292,7 +292,7 @@ export default function LandingPage() {
           <p className="max-w-2xl text-[15px] md:text-base text-muted-foreground leading-relaxed mb-10">
             A production-grade full-stack application demonstrating real-world patterns —
             multi-warehouse inventory tracking, role-based access control, order fulfillment
-            pipelines, and live stock picking — built with Spring Boot, React 19, and PostgreSQL.
+            pipelines, and live stock picking — built with Spring Boot, React 19, and MySQL.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
@@ -403,7 +403,7 @@ export default function LandingPage() {
                 {[
                   "Spring Boot 3 + Spring Security",
                   "JWT authentication & RBAC",
-                  "JPA / Hibernate with PostgreSQL",
+                  "JPA / Hibernate with MySQL",
                   "Paginated REST endpoints",
                   "Global exception handling",
                   "DTO pattern with validation",
@@ -503,7 +503,7 @@ export default function LandingPage() {
                 <ArrowRight className="h-4 w-4" />
               </NavLink>
               <a
-                href="https://github.com"
+                href="https://github.com/daksh8492/OrderFlow/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-8 py-3.5 rounded-xl border hover:bg-muted text-[14px] font-semibold text-muted-foreground hover:text-foreground transition-all hover:-translate-y-0.5"
@@ -527,7 +527,7 @@ export default function LandingPage() {
             <span className="text-sm font-bold">OrderFlow</span>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Full-Stack Resume Project · Spring Boot + React 19 + PostgreSQL
+            Full-Stack Resume Project · Spring Boot + React 19 + MySQL
           </p>
           <NavLink to="/login" className="text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors">
             Open App →

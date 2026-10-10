@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { toast } from "sonner";
-import { Waypoints, Lock, User, Eye, EyeOff, Loader2, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Waypoints,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  Loader2,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { login } from "@/services/authService";
-import { loginSuccess } from "@/store/authSlice";
+import { login, me } from "@/services/authService";
+import { loginSuccess, setUser } from "@/store/authSlice";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 
 function LoginPage() {
@@ -27,10 +36,15 @@ function LoginPage() {
     try {
       const token = await login({ code, password });
       dispatch(loginSuccess(token));
+      const user = await me();
+      dispatch(setUser(user));
       toast.success("Welcome back!");
       navigate("/app/dashboard");
     } catch (error: any) {
-      const msg = error.response?.data?.message || error.message || "Invalid credentials.";
+      const msg =
+        error.response?.data?.message ||
+        error.message ||
+        "Invalid credentials.";
       toast.error(msg);
     } finally {
       setIsLoading(false);
@@ -56,7 +70,10 @@ function LoginPage() {
         {/* Logo */}
         <div className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/40">
-            <Waypoints className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+            <Waypoints
+              className="h-4 w-4 text-primary-foreground"
+              strokeWidth={2.5}
+            />
           </div>
           <span className="text-[15px] font-bold">OrderFlow</span>
         </div>
@@ -64,22 +81,41 @@ function LoginPage() {
         {/* Feature list */}
         <div className="space-y-6">
           <div>
-            <p className="text-[11px] font-mono text-primary tracking-widest uppercase mb-2">What's inside</p>
+            <p className="text-[11px] font-mono text-primary tracking-widest uppercase mb-2">
+              What's inside
+            </p>
             <h2 className="text-2xl font-black leading-tight text-foreground">
-              Full-stack warehouse<br />management at scale
+              Full-stack warehouse
+              <br />
+              management at scale
             </h2>
           </div>
           <div className="space-y-4">
             {[
-              { emoji: "📦", label: "Real-time inventory tracking across bins, racks & zones" },
-              { emoji: "🔐", label: "JWT auth with Admin, Manager, and Operator roles" },
-              { emoji: "🚚", label: "Order picking, packing, and fulfillment pipeline" },
-              { emoji: "🏭", label: "Multi-warehouse stock transfer & allocation" },
+              {
+                emoji: "📦",
+                label:
+                  "Real-time inventory tracking across bins, racks & zones",
+              },
+              {
+                emoji: "🔐",
+                label: "JWT auth with Admin, Manager, and Operator roles",
+              },
+              {
+                emoji: "🚚",
+                label: "Order picking, packing, and fulfillment pipeline",
+              },
+              {
+                emoji: "🏭",
+                label: "Multi-warehouse stock transfer & allocation",
+              },
               { emoji: "📊", label: "Full audit trail on all stock movements" },
             ].map(({ emoji, label }) => (
               <div key={label} className="flex items-start gap-3">
                 <span className="text-base shrink-0 mt-px">{emoji}</span>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">{label}</p>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">
+                  {label}
+                </p>
               </div>
             ))}
           </div>
@@ -87,10 +123,22 @@ function LoginPage() {
 
         {/* Stack badge */}
         <div className="space-y-2">
-          <p className="text-[10px] text-muted-foreground/60 font-mono uppercase tracking-widest">Built with</p>
+          <p className="text-[10px] text-muted-foreground/60 font-mono uppercase tracking-widest">
+            Built with
+          </p>
           <div className="flex flex-wrap gap-1.5">
-            {["Spring Boot 3", "React 19", "TypeScript", "PostgreSQL", "JWT", "Tailwind"].map((t) => (
-              <span key={t} className="px-2.5 py-1 rounded-md border bg-card text-[10px] font-semibold text-muted-foreground">
+            {[
+              "Spring Boot 3",
+              "React 19",
+              "TypeScript",
+              "PostgreSQL",
+              "JWT",
+              "Tailwind",
+            ].map((t) => (
+              <span
+                key={t}
+                className="px-2.5 py-1 rounded-md border bg-card text-[10px] font-semibold text-muted-foreground"
+              >
                 {t}
               </span>
             ))}
@@ -107,7 +155,10 @@ function LoginPage() {
         {/* Mobile logo */}
         <div className="flex lg:hidden items-center gap-2.5 mb-10">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/40">
-            <Waypoints className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+            <Waypoints
+              className="h-4 w-4 text-primary-foreground"
+              strokeWidth={2.5}
+            />
           </div>
           <span className="text-[15px] font-bold">OrderFlow</span>
         </div>
@@ -121,15 +172,15 @@ function LoginPage() {
             <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
             Back to home
           </NavLink>
-
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="text-2xl font-black tracking-tight text-foreground mb-1.5">Sign in</h1>
+            <h1 className="text-2xl font-black tracking-tight text-foreground mb-1.5">
+              Sign in
+            </h1>
             <p className="text-[13px] text-muted-foreground">
               Enter your user code and password to access the workspace.
             </p>
           </div>
-
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             {/* User Code */}
@@ -171,7 +222,11 @@ function LoginPage() {
                   disabled={isLoading}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -195,13 +250,29 @@ function LoginPage() {
               )}
             </button>
           </form>
+          
 
-          {/* Demo hint */}
+          {/* Demo Credentials */}
           <div className="mt-6 rounded-xl border bg-card p-4">
-            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Demo Access</p>
-            <div className="space-y-1">
-              <p className="text-[12px] text-muted-foreground">Use your provisioned credentials to log in.</p>
-              <p className="text-[12px] text-muted-foreground">Contact the system admin for access.</p>
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+              Demo Access
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[12px]">
+                <span className="text-muted-foreground">User Code</span>
+                <span className="font-mono font-semibold text-foreground">
+                  USR-0001
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[12px]">
+                <span className="text-muted-foreground">Password</span>
+                <span className="font-mono font-semibold text-foreground">
+                  USR-0001
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-1">
+                Use these credentials to explore the application.
+              </p>
             </div>
           </div>
 
